@@ -13,6 +13,8 @@ function App() {
   const [search, setSearch] = useState('');
   const [scrollY, setScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showProductModal, setShowProductModal] = useState(false);
   // Detectar si estamos en la ruta de administración
    // Ruta de administración
 if (window.location.hash === '#admin') {
@@ -85,6 +87,11 @@ useEffect(() => {
 
     setCart([...cart, { ...product, cartId: Date.now() }]);
     setShowCart(true);
+  };
+
+  const openProductDetails = (product) => {
+    setSelectedProduct(product);
+    setShowProductModal(true);
   };
 
   const removeFromCart = (cartId) => {
@@ -470,16 +477,24 @@ useEffect(() => {
                         </p>
                       )}
 
-                      <button
-                        onClick={() => addToCart(p)}
-                        disabled={!p.stock || p.stock === 0}
-                        className={`w-full py-3 rounded-xl font-bold transform ${p.stock > 0
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => openProductDetails(p)}
+                          className="w-full bg-gray-100 text-gray-800 py-2 rounded-xl font-semibold hover:bg-gray-200 transition"
+                        >
+                          👁️ Ver detalles
+                        </button>
+                        <button
+                          onClick={() => addToCart(p)}
+                          disabled={!p.stock || p.stock === 0}
+                          className={`w-full py-3 rounded-xl font-bold transform ${p.stock > 0
                             ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 transition'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
-                          }`}
-                      >
-                        {p.stock > 0 ? '🛒 Agregar al carrito' : '❌ Sin stock disponible'}
-                      </button>
+                            }`}
+                        >
+                          {p.stock > 0 ? '🛒 Agregar al carrito' : '❌ Sin stock disponible'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -593,6 +608,135 @@ useEffect(() => {
                 </button>
               </div>
             )}
+          </div>
+        </>
+      )}
+      {/* Modal de detalles del producto */}
+      {showProductModal && selectedProduct && (
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-60 z-40 backdrop-blur-sm"
+            onClick={() => setShowProductModal(false)}
+          />
+          <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-slide-in">
+              {/* Header del modal */}
+              <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center rounded-t-2xl z-10">
+                <h2 className="text-2xl font-bold text-gray-900">Detalles del Producto</h2>
+                <button
+                  onClick={() => setShowProductModal(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Contenido del modal */}
+              <div className="p-6">
+                {/* Imagen del producto */}
+                <div className="mb-6">
+                  <img
+                    src={selectedProduct.image}
+                    alt={selectedProduct.name}
+                    className="w-full h-64 object-cover rounded-xl shadow-lg"
+                  />
+                </div>
+
+                {/* Información principal */}
+                <div className="mb-6">
+                  <span className="inline-block bg-blue-100 text-blue-600 text-sm font-semibold px-4 py-2 rounded-full mb-3">
+                    {selectedProduct.category}
+                  </span>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                    {selectedProduct.name}
+                  </h3>
+                  <p className="text-4xl font-bold text-blue-600 mb-4">
+                    ${selectedProduct.price.toLocaleString('es-CO')}
+                  </p>
+                </div>
+
+                {/* Stock */}
+                <div className="mb-6 pb-6 border-b border-gray-200">
+                  {selectedProduct.stock !== undefined && selectedProduct.stock !== null ? (
+                    selectedProduct.stock > 0 ? (
+                      <div className="flex items-center space-x-3 bg-green-50 p-4 rounded-xl">
+                        <span className="text-green-600 text-2xl">✓</span>
+                        <div>
+                          <p className="font-semibold text-green-800">Disponible en stock</p>
+                          <p className="text-sm text-green-600">{selectedProduct.stock} unidades disponibles</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-3 bg-red-50 p-4 rounded-xl">
+                        <span className="text-red-600 text-2xl">⚠️</span>
+                        <div>
+                          <p className="font-semibold text-red-800">Producto agotado</p>
+                          <p className="text-sm text-red-600">No disponible en este momento</p>
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <p className="text-gray-500 italic">Stock no disponible</p>
+                  )}
+                </div>
+
+                {/* Descripción completa */}
+                {selectedProduct.description && (
+                  <div className="mb-6">
+                    <h4 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                      📝 <span className="ml-2">Descripción</span>
+                    </h4>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                      {selectedProduct.description}
+                    </p>
+                  </div>
+                )}
+
+                {/* Características */}
+                <div className="mb-6">
+                  <h4 className="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                    ⭐ <span className="ml-2">Características</span>
+                  </h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">✓</span>
+                      <span className="text-gray-700">Garantía de 1 año</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">✓</span>
+                      <span className="text-gray-700">Soporte técnico incluido</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-600 mr-2">✓</span>
+                      <span className="text-gray-700">Instalación profesional disponible</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowProductModal(false)}
+                    className="flex-1 bg-gray-200 text-gray-800 py-4 rounded-xl font-bold hover:bg-gray-300 transition"
+                  >
+                    Cerrar
+                  </button>
+                  <button
+                    onClick={() => {
+                      addToCart(selectedProduct);
+                      setShowProductModal(false);
+                    }}
+                    disabled={!selectedProduct.stock || selectedProduct.stock === 0}
+                    className={`flex-1 py-4 rounded-xl font-bold transition ${selectedProduct.stock > 0
+                        ? 'bg-gradient-to-r from-blue-600 to-green-600 text-white hover:shadow-xl transform hover:scale-105'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+                      }`}
+                  >
+                    {selectedProduct.stock > 0 ? '🛒 Agregar al carrito' : '❌ Sin stock'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </>
       )}
