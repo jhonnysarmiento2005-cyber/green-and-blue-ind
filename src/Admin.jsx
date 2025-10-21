@@ -24,12 +24,12 @@ function AdminPanel() {
     if (productsData.length === 0) {
       // Si no hay productos, crear los productos por defecto
       const defaultProducts = [
-        { name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-        { name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-        { name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400" },
-        { name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400" },
-        { name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400" },
-        { name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400" },
+        { name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400", stock: 15 },
+        { name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400", stock: 1 },
+        { name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400", stock: 5 },
+        { name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400", stock: 2 },
+        { name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400", stock: 11 },
+        { name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400", stock: 50 },
       ];
       
       // Agregar productos por defecto a Firebase
@@ -66,7 +66,8 @@ function AdminPanel() {
     name: '',
     category: 'CCTV',
     price: 0,
-    image: ''
+    image: '',
+    stock: 0
   });
   setShowForm(true);
 };
@@ -89,7 +90,8 @@ function AdminPanel() {
         name: editingProduct.name,
         category: editingProduct.category,
         price: editingProduct.price,
-        image: editingProduct.image
+        image: editingProduct.image,
+        stock: editingProduct.stock || 0
       });
     } else {
       // Agregar nuevo producto
@@ -97,7 +99,8 @@ function AdminPanel() {
         name: editingProduct.name,
         category: editingProduct.category,
         price: editingProduct.price,
-        image: editingProduct.image
+        image: editingProduct.image,
+        stock: editingProduct.stock || 0
       });
     }
     
@@ -256,6 +259,25 @@ function AdminPanel() {
                   <h3 className="font-bold text-lg mb-1">{product.name}</h3>
                   <p className="text-sm text-gray-600 mb-2 bg-gray-100 inline-block px-3 py-1 rounded-full">{product.category}</p>
                   <p className="text-blue-600 font-bold text-xl mb-4">${product.price.toLocaleString('es-CO')}</p>
+
+                  <div className="mb-4 pb-4 border-b border-gray-200">
+                    {product.stock !== undefined && product.stock !== null ? (
+                      product.stock > 0 ? (
+                        <p className="text-sm">
+                          <span className="font-semibold text-green-600">📦 En stock:</span>
+                          <span className="ml-2 bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold">
+                            {product.stock} unidades
+                          </span>
+                        </p>
+                      ) : (
+                        <p className="text-sm font-semibold text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+                          ⚠️ Producto agotado
+                        </p>
+                      )
+                    ) : (
+                      <p className="text-sm text-gray-500 italic">Stock no configurado</p>
+                    )}
+                  </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEditProduct(product)}
@@ -324,6 +346,18 @@ function AdminPanel() {
                     placeholder="250000"
                   />
                 </div>
+                 <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">📦 Stock Disponible</label>
+                  <input
+                    type="number"
+                    value={editingProduct.stock || 0}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, stock: parseInt(e.target.value) || 0 })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="10"
+                    min="0"
+  />
+                  <p className="text-sm text-gray-500 mt-2">💡 Cantidad de unidades disponibles en inventario</p>
+                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">URL de la Imagen</label>

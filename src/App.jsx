@@ -77,7 +77,14 @@ useEffect(() => {
   };
 
   const addToCart = (product) => {
+    // Validar que haya stock disponible
+    if (!product.stock || product.stock === 0) {
+      alert('⚠️ Este producto está agotado');
+      return;
+    }
+
     setCart([...cart, { ...product, cartId: Date.now() }]);
+    setShowCart(true);
   };
 
   const removeFromCart = (cartId) => {
@@ -434,11 +441,39 @@ useEffect(() => {
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{p.name}</h3>
                       <p className="text-gray-500 text-sm mb-4 bg-gray-100 inline-block px-3 py-1 rounded-full">{p.category}</p>
                       <p className="text-blue-600 font-bold text-2xl mb-4">${p.price.toLocaleString('es-CO')}</p>
+
+                      <div className="mb-4">
+                        {p.stock !== undefined && p.stock !== null ? (
+                          p.stock > 0 ? (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm text-gray-600">
+                                <span className="font-semibold text-green-600">✓ Disponible:</span>
+                              </span>
+                              <span className="bg-green-100 text-green-800 text-sm font-bold px-3 py-1 rounded-full">
+                                {p.stock} unidades
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="bg-red-50 border-2 border-red-200 rounded-lg px-4 py-3">
+                              <p className="text-sm font-semibold text-red-600 text-center">
+                                ⚠️ Producto agotado
+                              </p>
+                            </div>
+                          )
+                        ) : (
+                          <p className="text-sm text-gray-400 italic">Stock no disponible</p>
+                        )}
+                      </div>
+
                       <button
                         onClick={() => addToCart(p)}
-                        className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition font-bold transform hover:scale-105"
+                        disabled={!p.stock || p.stock === 0}
+                        className={`w-full py-3 rounded-xl font-bold transform ${p.stock > 0
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:scale-105 transition'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+                          }`}
                       >
-                        🛒 Agregar al carrito
+                        {p.stock > 0 ? '🛒 Agregar al carrito' : '❌ Sin stock disponible'}
                       </button>
                     </div>
                   </div>
