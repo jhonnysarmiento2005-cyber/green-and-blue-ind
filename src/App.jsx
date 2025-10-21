@@ -133,8 +133,12 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <button onClick={goToHome} className="flex items-center gap-3 hover:opacity-80 transition">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
-                GB
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                <img
+                  src="logo.png"
+                  alt="GB"
+                  className="w-full h-full object-contain p-1"
+                />
               </div>
               <h1 className="text-xl font-bold text-gray-900">Green And Blue Ind</h1>
             </button>
@@ -174,81 +178,109 @@ useEffect(() => {
       <main className="pt-16">
         {currentPage === 'home' ? (
           <div>
-            {/* Hero Mejorado */}
-            <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-green-600 text-white py-32 px-6 overflow-hidden">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-20 left-10 w-72 h-72 bg-white rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-300 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+            {/* Hero Moderno con Glassmorphism */}
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-blue-50 to-blue-100">
+              {/* Fondo animado con formas sutiles */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Círculos animados de fondo - muy sutiles */}
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+                <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+
+                {/* Grid de fondo */}
+                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
               </div>
-              <div className="max-w-4xl mx-auto text-center relative z-10">
+
+              {/* Contenido principal */}
+              <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
+                {/* Logo transparente con resplandor */}
                 <div className="mb-8 flex justify-center">
-                  <img 
-                    src="logo.png" 
-                    alt="Green And Blue Ind" 
-                    className="h-24 md:h-32 w-auto object-contain drop-shadow-2xl"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextElementSibling.style.display = 'block';
-                    }}
-                  />
-                  <div style={{display: 'none'}} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/20">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center">
-                        <span className="text-3xl font-bold text-white">GB</span>
-                      </div>
-                      <div className="text-left">
-                        <div className="text-3xl font-bold text-white" style={{fontFamily: "'Space Grotesk', sans-serif"}}>
-                          <span className="text-green-400">Green</span> <span className="text-blue-300">And Blue</span> <span className="text-gray-200">Ind.</span>
-                        </div>
-                        <div className="text-sm text-blue-200 font-medium">INNOVACIÓN • TECNOLOGÍA • SOSTENABILIDAD</div>
-                      </div>
-                    </div>
+                  <div className="glass-card p-8 rounded-3xl backdrop-blur-xl bg-white/70 border border-blue-200/50 shadow-xl transform hover:scale-105 transition-all duration-500 hover:bg-white/90 hover:shadow-2xl">
+                    <img
+                      src="logo.png"
+                      alt="Green And Blue Ind"
+                      className="h-40 md:h-48 w-auto object-contain filter drop-shadow-2xl hover:drop-shadow-[0_0_30px_rgba(34,197,94,0.5)] transition-all duration-500"
+                    />
                   </div>
                 </div>
-                <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight" style={{fontFamily: "'Space Grotesk', 'Inter', sans-serif"}}>
-                  Tecnología, seguridad y liderazgo para un futuro más inteligente
+                    
+                  
+              
+                {/* Título principal con efecto gradient */}
+                <h2 className="text-5xl md:text-7xl font-bold mb-6 leading-tight" style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}>
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-700 to-green-600 animate-gradient">
+                    Tecnología, seguridad y liderazgo
+                  </span>
+                  <br />
+                  <span className="text-gray-800">
+                    para un futuro más inteligente
+                  </span>
                 </h2>
-                <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-                  Soluciones integrales en seguridad electrónica, gestión de proyectos y desarrollo de liderazgo para empresas innovadoras.
-                </p>
-                <div className="flex gap-4 justify-center flex-wrap">
-                  <button 
+
+                {/* Subtítulo con glass effect */}
+                <div className="glass-card backdrop-blur-md bg-white/60 border border-blue-200/50 rounded-2xl p-6 max-w-3xl mx-auto mb-10 shadow-xl">
+                  <p className="text-xl text-gray-700 leading-relaxed">
+                    Soluciones integrales en seguridad electrónica, gestión de proyectos y desarrollo de liderazgo para empresas innovadoras.
+                  </p>
+                </div>
+
+                {/* Botones con efectos modernos */}
+                <div className="flex gap-4 justify-center flex-wrap mb-12">
+                  <button
                     onClick={() => goToTienda()}
-                    className="bg-white text-blue-600 px-8 py-4 rounded-xl text-lg font-bold hover:shadow-2xl transition transform hover:scale-105"
+                    className="group relative px-8 py-4 bg-white text-blue-600 rounded-xl text-lg font-bold overflow-hidden shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
                   >
-                    Explorar Tienda →
+                    <span className="relative z-10 flex items-center gap-2">
+                      Explorar Tienda
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-green-500 opacity-0 group-hover:opacity-10 transition-opacity"></div>
                   </button>
-                  <a 
+
+                  <a
                     href="https://wa.me/573134809376"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-green-500 text-white px-8 py-4 rounded-xl text-lg font-bold hover:bg-green-600 transition transform hover:scale-105"
+                    className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl text-lg font-bold overflow-hidden shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
                   >
-                    📱 Contáctanos
+                    <span className="relative z-10 flex items-center gap-2">
+                      📱 Contáctanos
+                    </span>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
                   </a>
                 </div>
-              </div>
-            </section>
 
-            {/* Estadísticas - Banner Único */}
-            <section className="relative -mt-16 px-6 z-10">
-              <div className="max-w-6xl mx-auto bg-gradient-to-r from-blue-600 via-blue-700 to-green-600 rounded-3xl shadow-2xl p-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+                {/* Estadísticas con glass cards en una fila */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
                   {[
-                    { number: "500+", label: "Proyectos Completados", icon: "✅" },
-                    { number: "200+", label: "Clientes Satisfechos", icon: "😊" },
-                    { number: "10+", label: "Años de Experiencia", icon: "🏆" },
-                    { number: "24/7", label: "Soporte Técnico", icon: "🛠️" },
+                    { number: "500+", label: "Proyectos", icon: "✅" },
+                    { number: "200+", label: "Clientes", icon: "😊" },
+                    { number: "10+", label: "Años", icon: "🏆" },
+                    { number: "24/7", label: "Soporte", icon: "🛠️" },
                   ].map((stat, i) => (
-                    <div key={i} className="p-4">
-                      <div className="text-4xl mb-2">{stat.icon}</div>
-                      <div className="text-4xl md:text-5xl font-bold mb-1" style={{fontFamily: "'Space Grotesk', sans-serif"}}>{stat.number}</div>
-                      <div className="text-blue-100 font-medium text-sm">{stat.label}</div>
+                    <div
+                      key={i}
+                      className="glass-card backdrop-blur-md bg-white/70 border border-blue-200/50 rounded-2xl p-6 hover:bg-white/90 hover:border-blue-300 transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 shadow-lg hover:shadow-xl"
+                    >
+                      <div className="text-4xl mb-3">{stat.icon}</div>
+                      <div className="text-4xl md:text-5xl font-bold mb-2 text-blue-600" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                        {stat.number}
+                      </div>
+                      <div className="text-gray-600 font-medium text-sm">{stat.label}</div>
                     </div>
                   ))}
                 </div>
               </div>
+
+              {/* Scroll indicator */}
+              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <div className="w-6 h-10 border-2 border-blue-400/50 rounded-full flex justify-center">
+                  <div className="w-1 h-3 bg-blue-500 rounded-full mt-2 animate-pulse"></div>
+                </div>
+              </div>
             </section>
+
+            
 
             {/* Servicios Mejorados */}
             <section className="py-24 px-6 bg-white">
@@ -764,6 +796,66 @@ useEffect(() => {
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Animación de blob para el fondo */
+  @keyframes blob {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(20px, -50px) scale(1.1);
+    }
+    50% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    75% {
+      transform: translate(50px, 50px) scale(1.05);
+    }
+  }
+  
+  .animate-blob {
+    animation: blob 20s infinite;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Efecto glass (cristal esmerilado) */
+  .glass-card {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  /* Grid pattern de fondo */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Animación de gradiente */
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
   }
 `}</style>
     </div>
