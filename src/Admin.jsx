@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { db } from './firebase';
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 
 // Contraseña de acceso (cámbiala por la que quieras)
 const ADMIN_PASSWORD = "GreenBlue2024";
@@ -12,23 +14,35 @@ function AdminPanel() {
 
   // Cargar productos del localStorage al iniciar
   useEffect(() => {
-    const savedProducts = localStorage.getItem('green_blue_products');
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    } else {
-      // Productos por defecto
+  // Escuchar cambios en tiempo real desde Firebase
+  const unsubscribe = onSnapshot(collection(db, 'products'), async (snapshot) => {
+    const productsData = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    
+    if (productsData.length === 0) {
+      // Si no hay productos, crear los productos por defecto
       const defaultProducts = [
-        { id: 1, name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-        { id: 2, name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-        { id: 3, name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400" },
-        { id: 4, name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400" },
-        { id: 5, name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400" },
-        { id: 6, name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400" },
+        { name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
+        { name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
+        { name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400" },
+        { name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400" },
+        { name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400" },
+        { name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400" },
       ];
-      setProducts(defaultProducts);
-      localStorage.setItem('green_blue_products', JSON.stringify(defaultProducts));
+      
+      // Agregar productos por defecto a Firebase
+      for (const product of defaultProducts) {
+        await addDoc(collection(db, 'products'), product);
+      }
+    } else {
+      setProducts(productsData);
     }
-  }, []);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   const handleLogin = () => {
     if (password === ADMIN_PASSWORD) {
@@ -44,55 +58,66 @@ function AdminPanel() {
     setIsAuthenticated(false);
   };
 
-  const saveProducts = (newProducts) => {
-    setProducts(newProducts);
-    localStorage.setItem('green_blue_products', JSON.stringify(newProducts));
-  };
 
-  const handleAddProduct = () => {
-    setEditingProduct({
-      id: Date.now(),
-      name: '',
-      category: 'CCTV',
-      price: 0,
-      image: ''
-    });
-    setShowForm(true);
-  };
 
+ const handleAddProduct = () => {
+  setEditingProduct({
+    id: null,
+    name: '',
+    category: 'CCTV',
+    price: 0,
+    image: ''
+  });
+  setShowForm(true);
+};
   const handleEditProduct = (product) => {
     setEditingProduct({ ...product });
     setShowForm(true);
   };
 
-  const handleSaveProduct = () => {
-    if (!editingProduct.name || !editingProduct.price || !editingProduct.image) {
-      alert('⚠️ Por favor completa todos los campos');
-      return;
-    }
+  const handleSaveProduct = async () => {
+  if (!editingProduct.name || !editingProduct.price || !editingProduct.image) {
+    alert('⚠️ Por favor completa todos los campos');
+    return;
+  }
 
-    const existingIndex = products.findIndex(p => p.id === editingProduct.id);
-    let newProducts;
-
-    if (existingIndex >= 0) {
-      newProducts = [...products];
-      newProducts[existingIndex] = editingProduct;
+  try {
+    if (editingProduct.id && products.some(p => p.id === editingProduct.id)) {
+      // Actualizar producto existente
+      const productRef = doc(db, 'products', editingProduct.id);
+      await updateDoc(productRef, {
+        name: editingProduct.name,
+        category: editingProduct.category,
+        price: editingProduct.price,
+        image: editingProduct.image
+      });
     } else {
-      newProducts = [...products, editingProduct];
+      // Agregar nuevo producto
+      await addDoc(collection(db, 'products'), {
+        name: editingProduct.name,
+        category: editingProduct.category,
+        price: editingProduct.price,
+        image: editingProduct.image
+      });
     }
-
-    saveProducts(newProducts);
+    
     setShowForm(false);
     setEditingProduct(null);
-  };
-
-  const handleDeleteProduct = (id) => {
-    if (window.confirm('¿Estás seguro de eliminar este producto?')) {
-      const newProducts = products.filter(p => p.id !== id);
-      saveProducts(newProducts);
+  } catch (error) {
+    console.error("Error guardando producto:", error);
+    alert('❌ Error al guardar el producto');
+  }
+};
+  const handleDeleteProduct = async (id) => {
+  if (window.confirm('¿Estás seguro de eliminar este producto?')) {
+    try {
+      await deleteDoc(doc(db, 'products', id));
+    } catch (error) {
+      console.error("Error eliminando producto:", error);
+      alert('❌ Error al eliminar el producto');
     }
-  };
-
+  }
+};
   const handleExportData = () => {
     const dataStr = JSON.stringify(products, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });

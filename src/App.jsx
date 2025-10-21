@@ -1,26 +1,13 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 const AdminPanel = lazy(() => import('./Admin'));
+import { db } from './firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
-// Datos de productos
-const getProducts = () => {
-  const saved = localStorage.getItem('green_blue_products');
-  if (saved) {
-    return JSON.parse(saved);
-  }
-  // Productos por defecto si no hay nada guardado
-  return [
-    { id: 1, name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400" },
-    { id: 2, name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400" },
-    { id: 3, name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400" },
-    { id: 4, name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400" },
-    { id: 5, name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400" },
-    { id: 6, name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400" },
-  ];
-};
+
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [cart, setCart] = useState([]);
-  const [products, setProducts] = useState(getProducts());
+  const [products, setProducts] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [filter, setFilter] = useState('Todos');
   const [search, setSearch] = useState('');
@@ -58,18 +45,18 @@ if (window.location.hash === '#admin') {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   // Actualizar productos cuando cambien en localStorage
-  useEffect(() => {
-    const updateProducts = () => {
-      const newProducts = getProducts();
-      setProducts(newProducts);
-    };
-    
-    // Revisar cada segundo si hay cambios
-    const interval = setInterval(updateProducts, 1000);
-    
-    // Limpiar el intervalo cuando el componente se desmonte
-    return () => clearInterval(interval);
-  }, []);
+  // Cargar productos desde Firebase en tiempo real
+useEffect(() => {
+  const unsubscribe = onSnapshot(collection(db, 'products'), (snapshot) => {
+    const productsData = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    setProducts(productsData);
+  });
+
+  return () => unsubscribe();
+}, []);
 
   const scrollToSection = (sectionId) => {
     if (currentPage !== 'home') {
