@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-const AdminPanel = lazy(() => import('./Admin.jsx'));
+const AdminPanel = lazy(() => import('./Admin'));
 
 // Datos de productos
 const getProducts = () => {
