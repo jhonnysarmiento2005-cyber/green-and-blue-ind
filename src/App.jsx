@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import AdminPanel from './Admin.jsx';
+import { useState, useEffect, lazy, Suspense } from 'react';
+const AdminPanel = lazy(() => import('./Admin.jsx'));
 
 // Datos de productos
 const getProducts = () => {
@@ -27,10 +27,31 @@ function App() {
   const [scrollY, setScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // Detectar si estamos en la ruta de administración
-   if (window.location.hash === '#admin') {
-     return <AdminPanel />;
-   }
-
+   // Ruta de administración
+if (window.location.hash === '#admin') {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #2563eb 0%, #059669 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          color: 'white',
+          fontSize: '24px',
+          fontWeight: 'bold',
+          fontFamily: "'Space Grotesk', sans-serif"
+        }}>
+          ⏳ Cargando panel de administración...
+        </div>
+      </div>
+    }>
+      <AdminPanel />
+    </Suspense>
+  );
+}
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
