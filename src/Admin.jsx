@@ -24,12 +24,54 @@ function AdminPanel() {
     if (productsData.length === 0) {
       // Si no hay productos, crear los productos por defecto
       const defaultProducts = [
-        { name: "Cámara IP 4MP", category: "CCTV", price: 250000, image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400", stock: 15 },
-        { name: "Grabador NVR 8ch", category: "CCTV", price: 400000, image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400", stock: 1 },
-        { name: "Lector Biométrico", category: "Control de Acceso", price: 320000, image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400", stock: 5 },
-        { name: "Panel de Control", category: "Seguridad Electrónica", price: 450000, image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400", stock: 2 },
-        { name: "Cámara Domo PTZ", category: "CCTV", price: 550000, image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400", stock: 11 },
-        { name: "Control de Acceso Facial", category: "Control de Acceso", price: 680000, image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400", stock: 50 },
+        {
+          name: "Cámara IP 4MP",
+          category: "CCTV",
+          price: 250000,
+          image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400",
+          stock: 15,
+          description: "Cámara IP de alta definición 4MP con visión nocturna infrarroja hasta 30m, detección inteligente de movimiento y resistencia al agua IP67"
+        },
+        {
+          name: "Grabador NVR 8ch",
+          category: "CCTV",
+          price: 400000,
+          image: "https://images.unsplash.com/photo-1558002038-1055907df827?w=400",
+          stock: 10,
+          description: "Grabador de red para 8 cámaras IP, compresión H.265+, almacenamiento hasta 8TB, acceso remoto y reproducción simultánea"
+        },
+        {
+          name: "Lector Biométrico",
+          category: "Control de Acceso",
+          price: 320000,
+          image: "https://images.unsplash.com/photo-1614064548392-d21f89090b7b?w=400",
+          stock: 8,
+          description: "Lector biométrico de huella dactilar con capacidad para 3000 usuarios, conexión TCP/IP y salida Wiegand para control de acceso"
+        },
+        {
+          name: "Panel de Control",
+          category: "Seguridad Electrónica",
+          price: 450000,
+          image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=400",
+          stock: 12,
+          description: "Panel de alarma con 8 zonas cableadas expandible a 32, comunicación GSM/IP, app móvil y batería de respaldo"
+        },
+        {
+          name: "Cámara Domo PTZ",
+          category: "CCTV",
+          price: 550000,
+          image: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=400",
+          stock: 5,
+          description: "Cámara domo PTZ con zoom óptico 30x, rotación 360°, seguimiento automático de objetos y visión nocturna hasta 100m"
+        },
+        {
+          name: "Control de Acceso Facial",
+          category: "Control de Acceso",
+          price: 680000,
+          image: "https://images.unsplash.com/photo-1560732488-6b0df240254a?w=400",
+          stock: 20,
+          description: "Sistema de reconocimiento facial avanzado con detección de temperatura, mascarilla y capacidad para 10,000 rostros registrados"
+        },
       ];
       
       // Agregar productos por defecto a Firebase
@@ -60,17 +102,18 @@ function AdminPanel() {
 
 
 
- const handleAddProduct = () => {
-  setEditingProduct({
-    id: null,
-    name: '',
-    category: 'CCTV',
-    price: 0,
-    image: '',
-    stock: 0
-  });
-  setShowForm(true);
-};
+  const handleAddProduct = () => {
+    setEditingProduct({
+      id: null,
+      name: '',
+      category: 'CCTV',
+      price: 0,
+      image: '',
+      stock: 0,
+      description: ''
+    });
+    setShowForm(true);
+  };
   const handleEditProduct = (product) => {
     setEditingProduct({ ...product });
     setShowForm(true);
@@ -84,25 +127,25 @@ function AdminPanel() {
 
   try {
     if (editingProduct.id && products.some(p => p.id === editingProduct.id)) {
-      // Actualizar producto existente
-      const productRef = doc(db, 'products', editingProduct.id);
-      await updateDoc(productRef, {
-        name: editingProduct.name,
-        category: editingProduct.category,
-        price: editingProduct.price,
-        image: editingProduct.image,
-        stock: editingProduct.stock || 0
-      });
-    } else {
-      // Agregar nuevo producto
-      await addDoc(collection(db, 'products'), {
-        name: editingProduct.name,
-        category: editingProduct.category,
-        price: editingProduct.price,
-        image: editingProduct.image,
-        stock: editingProduct.stock || 0
-      });
-    }
+  const productRef = doc(db, 'products', editingProduct.id);
+  await updateDoc(productRef, {
+    name: editingProduct.name,
+    category: editingProduct.category,
+    price: editingProduct.price,
+    image: editingProduct.image,
+    stock: editingProduct.stock || 0,
+    description: editingProduct.description || ''
+  });
+} else {
+  await addDoc(collection(db, 'products'), {
+    name: editingProduct.name,
+    category: editingProduct.category,
+    price: editingProduct.price,
+    image: editingProduct.image,
+    stock: editingProduct.stock || 0,
+    description: editingProduct.description || ''
+  });
+}
     
     setShowForm(false);
     setEditingProduct(null);
@@ -278,6 +321,11 @@ function AdminPanel() {
                       <p className="text-sm text-gray-500 italic">Stock no configurado</p>
                     )}
                   </div>
+                  {product.description && (
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                      {product.description}
+                    </p>
+                  )}
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEditProduct(product)}
@@ -358,6 +406,17 @@ function AdminPanel() {
   />
                   <p className="text-sm text-gray-500 mt-2">💡 Cantidad de unidades disponibles en inventario</p>
                  </div>
+                 <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">📝 Descripción del Producto</label>
+                  <textarea
+                    value={editingProduct.description || ''}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    placeholder="Describe las características principales del producto..."
+                    rows="4"
+                  />
+                  <p className="text-sm text-gray-500 mt-2">💡 Describe las características, beneficios y especificaciones técnicas</p>
+                </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">URL de la Imagen</label>

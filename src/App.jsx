@@ -464,6 +464,11 @@ useEffect(() => {
                           <p className="text-sm text-gray-400 italic">Stock no disponible</p>
                         )}
                       </div>
+                      {p.description && (
+                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                          {p.description}
+                        </p>
+                      )}
 
                       <button
                         onClick={() => addToCart(p)}
@@ -593,18 +598,30 @@ useEffect(() => {
       )}
 
       <style>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(0);
-          }
-        }
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-      `}</style>
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+`}</style>
     </div>
   );
 }
