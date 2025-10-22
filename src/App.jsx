@@ -106,7 +106,7 @@ useEffect(() => {
         cart.map(p => `• ${p.name} - $${p.price.toLocaleString('es-CO')}`).join("\n") +
         `\n\n💰 *Total: $${total.toLocaleString('es-CO')} COP*`
     );
-    window.open(`https://wa.me/573134809376?text=${msg}`, "_blank");
+    window.open(`https://api.whatsapp.com/send?phone=573134809376?text=${msg}`, "_blank");
   };
 
   const filtered = products.filter(
@@ -155,7 +155,7 @@ useEffect(() => {
               >
                 Tienda
               </button>
-              <a href="https://wa.me/573134809376" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-green-600 transition">
+              <a href="https://api.whatsapp.com/send?phone=573134809376" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-green-600 transition">
                 WhatsApp
               </a>
               <a href="mailto:greenandblue@gmail.com" className="text-gray-600 hover:text-blue-600 transition">
@@ -238,7 +238,7 @@ useEffect(() => {
                   </button>
 
                   <a
-                    href="https://wa.me/573134809376"
+                    href="https://api.whatsapp.com/send?phone=573134809376"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl text-lg font-bold overflow-hidden shadow-2xl hover:shadow-green-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
@@ -375,7 +375,7 @@ useEffect(() => {
                         </button>
                       ) : (
                         <a
-                          href="https://wa.me/573134809376"
+                          href="https://api.whatsapp.com/send?phone=573134809376"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="relative z-10 block w-full bg-gray-800 group-hover:bg-white text-white group-hover:text-gray-900 py-2.5 rounded-xl font-semibold text-center transition-all duration-300 transform group-hover:scale-105 text-sm shadow-lg"
@@ -419,7 +419,7 @@ useEffect(() => {
                       Cotiza tu proyecto sin compromiso y recibe una propuesta personalizada en 24 horas.
                     </p>
                     <a
-                      href="https://wa.me/573134809376"
+                      href="https://api.whatsapp.com/send?phone=573134809376"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-block bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:shadow-2xl transition transform hover:scale-105"
@@ -561,13 +561,13 @@ useEffect(() => {
               <div className="space-y-2">
                 <button onClick={goToHome} className="block hover:text-blue-400 transition">Inicio</button>
                 <button onClick={() => goToTienda()} className="block hover:text-blue-400 transition">Tienda</button>
-                <a href="https://wa.me/573134809376" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition">WhatsApp</a>
+                <a href="https://api.whatsapp.com/send?phone=573134809376" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition">WhatsApp</a>
               </div>
             </div>
             <div>
               <h4 className="text-white font-bold mb-4">Contacto</h4>
               <div className="space-y-3">
-                <a href="https://wa.me/573134809376" className="flex items-center gap-2 hover:text-green-400 transition">
+                <a href="https://api.whatsapp.com/send?phone=573134809376" className="flex items-center gap-2 hover:text-green-400 transition">
                   <span>📱</span> +57 313 480 9376
                 </a>
                 <a href="mailto:greenandblue@gmail.com" className="flex items-center gap-2 hover:text-blue-400 transition">
