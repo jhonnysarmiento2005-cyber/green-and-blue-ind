@@ -106,7 +106,7 @@ useEffect(() => {
         cart.map(p => `• ${p.name} - $${p.price.toLocaleString('es-CO')}`).join("\n") +
         `\n\n💰 *Total: $${total.toLocaleString('es-CO')} COP*`
     );
-    window.open(`https://api.whatsapp.com/send?phone=573134809376?text=${msg}`, "_blank");
+    window.open(`https://wa.me/573134809376?text=${msg}`, "_blank");
   };
 
   const filtered = products.filter(
